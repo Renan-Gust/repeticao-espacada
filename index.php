@@ -8,6 +8,8 @@ require_once './connection.php';
 
 $date = Date('Y-m-d');
 
+// echo $date . "<br>";
+
 ?>
 
 <!DOCTYPE html>
@@ -26,31 +28,41 @@ $date = Date('Y-m-d');
 
 
 
-$teste = [];
-$teste2 = [];
+$see_card_today = [];
+// $teste2 = [];
 
 foreach($cards_total as $key => $value){
-    if($value['see_card_again'] === $date){
-        // array_push($teste, $value);
-        array_push($teste, $key + 1);
+    echo "see_card_again: " . $value['see_card_again'] . "<br>";
 
-        // echo $key + 1;
+    if($value['see_card_again'] === $date){
+        array_push($see_card_today, $value);
     }
 }
 
-$id = $teste[0];
+// $sql_read = mysqli_query(
+//     $on, 
+//     "SELECT id FROM cards_content"
+// );
 
-$sql_read = mysqli_query(
-    $on, 
-    "SELECT content, see_card_again FROM cards_content WHERE id = $id"
-);
+// $sql_read = mysqli_query(
+//     $on, 
+//     "SELECT content, see_card_again FROM cards_content WHERE id = $card_id"
+// );
+
+// while($results = mysqli_fetch_array($sql_read)) {
+//     array_push($teste2, $results);
+// }
 
 
+// while($results = mysqli_fetch_array($sql_read)) {
+//     array_push($teste2, $results);
+// }
 
-while($results = mysqli_fetch_array($sql_read)) {
-    array_push($teste2, $results);
-    // $teste3 = $results;
-}
+// $card_id = $teste2[0]['id'];
+
+// echo $card_id . "<br>";
+// print_r($see_card_today);
+
 
 ?>
 
@@ -58,30 +70,23 @@ while($results = mysqli_fetch_array($sql_read)) {
     <div class="main-content">
         <div class="content-wrapper">
 
-            <?php if(!empty($teste)) : ?>
+            <?php if(!empty($see_card_today)) : ?>
                 <div class="content">
                     <div class="card">
                         <div class="card-content">
-                            <?= $teste2[0]['content'] . "<br>"; ?>
-                            <?= $teste2[0]['see_card_again'] . "<br>"; ?>
+                            <?= $see_card_today[0]['content'] . "<br>"; ?>
+                            <?= $see_card_today[0]['see_card_again'] . "<br>"; ?>
                             <?php 
-                            
-                                $see = $teste2[0]['see_card_again'];
-
-                                echo strtotime($see) . "<br>";
                               
-                                $date2 = Date('Y-m-d');
+                                $dateUser = Date('Y-m-d', strtotime('+5 days'));
 
-                                if(strtotime($date2) == strtotime($see)){
-                                    echo "É igual" . "<br>";
-                                }
+                                // echo "Somando 4 dias: " . strtotime($dateUser) . "<br>";
 
-                                $dateUser = Date('Y-m-d', strtotime('+4 days'));
+                                $see_card_again = gmdate("Y-m-d", strtotime($dateUser));
 
-                                echo strtotime($dateUser) . "<br>";
+                                echo "Transformando o total em data novamente: " . $see_card_again;
 
-                                // echo strtotime($dateUser) . strtotime($see) . "<br>";
-                                // Pegar a data do see_card_again transformar em segundos
+                                // Pegar a data do see_card_again transformar em segundos (Feito)
                                 // Quando for clicado no botão somar o equivalente do botão
                                 // Transformar em data novamente e atualizar no banco
                             
@@ -89,26 +94,51 @@ while($results = mysqli_fetch_array($sql_read)) {
                         </div>
 
                         <div class="buttons">
-                            <div>
-                                <span>10min</span>
-                                <button>Errei</button>
-                            </div>
-                            <div>
-                                <span>10min</span>
-                                <button>Fácil</button>
-                            </div>
-                            <div>
-                                <span>10min</span>
-                                <button>Difícil</button>
-                            </div>
-                            <div>
-                                <span>10min</span>
-                                <button>Bom</button>
-                            </div>
-                            <div>
-                                <span>10min</span>
-                                <button>Muito Fácil</button>
-                            </div>
+                            <form action="./test.php">
+                                <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
+                                <input type="number" name="sum_date" value="1" hidden>
+                                <div>
+                                    <span>10min</span>
+                                    <button type="submit">Errei</button>
+                                </div>
+                            </form>
+
+                            <form action="./test.php">
+                                <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
+                                <input type="number" name="sum_date" value="5" hidden>
+                                <div>
+                                    <span>10min</span>
+                                    <button type="submit">Fácil</button>
+                                </div>
+                            </form>
+
+                            <form action="./test.php">
+                                <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
+                                <input type="number" name="sum_date" value="1" hidden>
+                                <div>
+                                    <span>10min</span>
+                                    <button type="submit">Difícil</button>
+                                </div>
+                            </form>
+
+
+                            <form action="./test.php">
+                                <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
+                                <input type="number" name="sum_date" value="3" hidden>
+                                <div>
+                                    <span>10min</span>
+                                    <button type="submit">Bom</button>
+                                </div>
+                            </form>
+
+                            <form action="./test.php">
+                                <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
+                                <input type="number" name="sum_date" value="7" hidden>
+                                <div>
+                                    <span>10min</span>
+                                    <button type="submit">Muito Fácil</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -117,9 +147,7 @@ while($results = mysqli_fetch_array($sql_read)) {
                 <p>Não tem cards</p>
             <?php endif; ?>
 
-            <?php print_r($teste2[0]); ?>
-
-            <!-- <button onclick="addCard()">Adicionar Card</button> -->
+            <button onclick="addCard()">Adicionar Card</button>
         </div>
     </div>
 </body>
