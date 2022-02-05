@@ -9,7 +9,7 @@
 
     <style>
         .add-card {
-            /* display: none; */
+            display: none;
         }
     </style>
 </head>
@@ -17,7 +17,7 @@
 <body>
     <div class="container add-card">
         <div class="content">
-            <form action="./classes/Add_Card.php" method="POST">
+            <form action="./utils/add_card.php" method="POST">
                 <input type="text" name="content" placeholder="Conteúdo do seu card">
                 <select name="content_type">
                     <option value="text">Texto</option>

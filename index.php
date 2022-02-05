@@ -1,14 +1,8 @@
 <?php
 
-require_once './views/add_card.php';
-require_once './utils/contents.php';
+require_once './views/add_card_modal.php';
 require_once './utils/show_cards.php';
-
-require_once './connection.php';
-
-$date = Date('Y-m-d');
-
-// echo $date . "<br>";
+require_once './utils/see_card_again.php';
 
 ?>
 
@@ -24,48 +18,6 @@ $date = Date('Y-m-d');
     <link rel="stylesheet" href="./styles/styles.css">
 </head>
 
-<?php
-
-
-
-$see_card_today = [];
-// $teste2 = [];
-
-foreach($cards_total as $key => $value){
-    echo "see_card_again: " . $value['see_card_again'] . "<br>";
-
-    if($value['see_card_again'] === $date){
-        array_push($see_card_today, $value);
-    }
-}
-
-// $sql_read = mysqli_query(
-//     $on, 
-//     "SELECT id FROM cards_content"
-// );
-
-// $sql_read = mysqli_query(
-//     $on, 
-//     "SELECT content, see_card_again FROM cards_content WHERE id = $card_id"
-// );
-
-// while($results = mysqli_fetch_array($sql_read)) {
-//     array_push($teste2, $results);
-// }
-
-
-// while($results = mysqli_fetch_array($sql_read)) {
-//     array_push($teste2, $results);
-// }
-
-// $card_id = $teste2[0]['id'];
-
-// echo $card_id . "<br>";
-// print_r($see_card_today);
-
-
-?>
-
 <body>
     <div class="main-content">
         <div class="content-wrapper">
@@ -76,45 +28,30 @@ foreach($cards_total as $key => $value){
                         <div class="card-content">
                             <?= $see_card_today[0]['content'] . "<br>"; ?>
                             <?= $see_card_today[0]['see_card_again'] . "<br>"; ?>
-                            <?php 
-                              
-                                $dateUser = Date('Y-m-d', strtotime('+5 days'));
-
-                                // echo "Somando 4 dias: " . strtotime($dateUser) . "<br>";
-
-                                $see_card_again = gmdate("Y-m-d", strtotime($dateUser));
-
-                                echo "Transformando o total em data novamente: " . $see_card_again;
-
-                                // Pegar a data do see_card_again transformar em segundos (Feito)
-                                // Quando for clicado no botão somar o equivalente do botão
-                                // Transformar em data novamente e atualizar no banco
-                            
-                            ?>
                         </div>
 
                         <div class="buttons">
-                            <form action="./test.php">
+                            <form action="./utils/update_card.php">
                                 <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
-                                <input type="number" name="sum_date" value="1" hidden>
+                                <input type="number" name="sum_date" value="<?=  $last_click ? ($last_click_day * 1) - $last_click_day : 0 ?>" hidden>
                                 <div>
                                     <span>10min</span>
                                     <button type="submit">Errei</button>
                                 </div>
                             </form>
 
-                            <form action="./test.php">
+                            <form action="./utils/update_card.php">
                                 <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
-                                <input type="number" name="sum_date" value="5" hidden>
+                                <input type="number" name="sum_date" value="<?=  $last_click ? ($last_click_day * 3) - $last_click_day : 5 ?>" hidden>
                                 <div>
                                     <span>10min</span>
                                     <button type="submit">Fácil</button>
                                 </div>
                             </form>
 
-                            <form action="./test.php">
+                            <form action="./utils/update_card.php">
                                 <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
-                                <input type="number" name="sum_date" value="1" hidden>
+                                <input type="number" name="sum_date" value="<?=  $last_click ? ($last_click_day * 2) - $last_click_day : 1 ?>" hidden>
                                 <div>
                                     <span>10min</span>
                                     <button type="submit">Difícil</button>
@@ -122,18 +59,18 @@ foreach($cards_total as $key => $value){
                             </form>
 
 
-                            <form action="./test.php">
+                            <form action="./utils/update_card.php">
                                 <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
-                                <input type="number" name="sum_date" value="3" hidden>
+                                <input type="number" name="sum_date" value="<?=  $last_click ? ($last_click_day * 4) - $last_click_day : 3 ?>" hidden>
                                 <div>
                                     <span>10min</span>
                                     <button type="submit">Bom</button>
                                 </div>
                             </form>
 
-                            <form action="./test.php">
+                            <form action="./utils/update_card.php">
                                 <input type="number" name="card_id" value="<?= $see_card_today[0]['id'] ?>" hidden>
-                                <input type="number" name="sum_date" value="7" hidden>
+                                <input type="number" name="sum_date" value="<?=  $last_click ? ($last_click_day * 6) - $last_click_day : 7 ?>" hidden>
                                 <div>
                                     <span>10min</span>
                                     <button type="submit">Muito Fácil</button>
@@ -159,35 +96,3 @@ foreach($cards_total as $key => $value){
 </script>
 
 </html>
-
-<!-- 
-
-Colocar a data quando criar um card (Feito)
-
-***Primeira Etapa***
-Exibir os cards que são no mesmo dia que o dia atual, um de cada vez (Feito)
-
-
-
-
-
-***Segunda Etapa***
-Pegar o dia e o horário que ele foi clicado e dependendo do botão que será clicado
-somar os dias da dificuldade + o dia e o horário dele
-
-E atualizar o date desse card
-
-Revisar card,
-Se for "Errei" revisar em 10min
-Se for "Fácil" revisar em 5 dias
-Se for "Difícil" revisar em 1 dia
-Se for "Bom" revisar em 3 dias
-Se for "Muito Fácil" revisar em 7 dias
-
-
-
-Se o card já foi visitado antes e dependendo do botão que foi clicado, 
-aumentar os intervalos de dias multiplicando por 4
-
-
--->
